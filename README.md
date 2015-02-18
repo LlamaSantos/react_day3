@@ -295,4 +295,6 @@ The last step is the AddGame path which will allow authenticated users the abili
 
 Specifically the way we're using our Authenticated Mixin to protect the AddGame route. Remember earlier when I mentioned how once the boilerplate route protection stuff is complete it would be a breeze to protect our routes? Well now we can see that. The only thing we have to do to make the route/component protected is to add our ```Authenticated``` object as a mixing (as seen in our ```mixins``` array in the AddGame component). 
 
+* The very last thing to do is head back over to your routes.js file and add the newGame route making sure the path is set up properly with the route paramter.
+
 Double check that your app is working properly. As always, there's a solutions branch you can check out to see how I went about creating this app. 
