@@ -166,7 +166,7 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
 
 *I realize these instructions have been pretty vague. What I don't want to have happen is that you just copy my implementation of this app and get nothing out of it. If you're struggling right now I suggest you do these two things. First, go back to the Login/Register component and look how we're invoking certain methods on our firebaseUtils object. This will give you insight into how each method is being used. Next, go back to the sample app and the descriptions of each file and think about how you'd accomplish the certain tasks. I'll walk over my code later today but I don't want you to essentially just recreate what I have. Finding your own way of building the app will help you much more than copying my way*
 
-#### Step 4: Routes
+#### Step 4: Menu
 
 There are two more steps left before we're completely done with our protected routes. They are adding in our main Menu interface, and adding in our actual Routes in the config folder. Let's start with the interface. 
 
@@ -181,3 +181,10 @@ This brings up an interesting example though. If the user is logged in, we don't
 
 The only other thing about this file that might look off is our ```componentWillMount``` function. Remember in our firebaseUtils object we call ```this.onChange(false)``` whenever a user logs out and ```this.onChange(true)``` whenever a user logs in. If we didn't do this, our menu would never re-render. But, by setting onChange to a function which calls setState, whenever onChange is invoked our component will rerender due to setState being called. 
 
+#### Step 5: Routes
+
+We're almost done with our protected routes. All we need to do now is specifcy what our routes will look like in our routes.js file. 
+
+I don't want to give you the code for this one but remember that you can specify your routes using JSX. Check out [React Routers main API](https://github.com/rackt/react-router) for an example of how to do this. 
+
+**As I mentioned earlier, I realize this section was super heavy. If you're still struggling, I've made a Repo which is the bare minimum you need to get Authentication/Protected Routes working with Firebase and React Router which can be found [HERE](https://github.com/tylermcginnis/react-router-firebase-auth). I highly reccommend you fork it and play around with it because it follows the exact same pattern we did above without all the extra NBA Routes stuff. You'll find that once it clicks, you'll love how it works. Another great resource is Michael Jackson's talk from Reactconf. [Here's his talk](http://youtu.be/XZfvW1a8Xac?t=18m42s) and that will take you to the exact moment he talks about authentication with React Router. **
