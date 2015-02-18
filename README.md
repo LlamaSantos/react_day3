@@ -6,7 +6,7 @@ The purpose of this project is get you comfortable with routing using React Rout
 Some side notes before we get started. 
 * This project will contain a lot of bootstrap boilerplate. Feel free to remove this and create your own if you'd like. 
 * Notice the original file structure is just like every other project we've done thus far with a few additions. One of those additions is that our public folder has an images folder which has a "spritesheet.png" file in it. This, as you've probably guessed, is just a sprite sheet of all the images we'll be using in this app. If you're new to "Sprites", quickly read [THIS](http://css-tricks.com/css-sprites/) article to get caught up to speed. It should take you no more than 5 minutes.
-* You'll need to create your own Firebase account and new project. To do that head over to [Firebase.com](firebase.com) and sign up for an account. Once you sign up and login, you'll be taken to your dashboard where you can create a new app. For now, just create a new app in firebase. 
+* You'll need to create your own Firebase account and new project. To do that head over to [Firebase.com](firebase.com) and sign up for an account. Once you sign up and login, you'll be taken to your dashboard where you can create a new app. For now, create a new app in Firebase, then click on the "Login and Auth" section of your firebase and then click the box that says "Enable Email & Password Authentication". This will allow us to use email and password authentication in our firebase.
 * This project is intentionally rather large. If you don't get done, don't sweat it. The biggest thing to remember is that you're here to learn, which is usually a by product of finishing the repo. If you don't get done but you feel comfortable with authenticated routes, routing, and some basic firebase functions, you're in a good spot.
 
 ###Step 1: Code Architecture
@@ -67,7 +67,7 @@ Head over to your ```authenticated.js``` file in the ```utils``` folder. As ment
 * Add a ```statics``` property to the ```authenticated``` object. 
 * Inside your ```statics``` object, add a ```willTransitionTo``` method which has ```transition``` as its parameter.
 
-Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object which will check is the user is logged if. If they're not, we'll redirec them to the login route.
+Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object which will check is the user is logged if. If they're not, we'll redirect them to the login route.
 
 * If ```firebaseUtils.isLoggedIn()``` is falsy, then add a property to the ```Login``` component called ```attemptedTransition``` and set it equal to the transition parameter. Then, use ```transition.redirect('login')``` to redirect to the login page. 
 
@@ -161,7 +161,7 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
   }
 ```
 * Next create a ```isLoggedIn``` method which will return true if the cachedUser is not null or, it will return true if ```ref.getAuth()``` is also not null. If they're both null, return false.
-* Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(flalse)``` which we'll talk about later.
+* Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(false)``` which we'll talk about later.
 * Lastly create a ```toArray``` method which takes in a object, and returns an array with the indices in that array being the values that were in the object. The purpose of this is that firebase only returns us object, so we need to convert them to arrays in order to user ```.map``` and ```.filter``` on our data. 
 
 *I realize these instructions have been pretty vague. What I don't want to have happen is that you just copy my implementation of this app and get nothing out of it. If you're struggling right now I suggest you do these two things. First, go back to the Login/Register component and look how we're invoking certain methods on our firebaseUtils object. This will give you insight into how each method is being used. Next, go back to the sample app and the descriptions of each file and think about how you'd accomplish the certain tasks. I'll walk over my code later today but I don't want you to essentially just recreate what I have. Finding your own way of building the app will help you much more than copying my way*
@@ -176,7 +176,7 @@ This brings up an interesting example though. If the user is logged in, we don't
 
 * Before we modify any code, get comfortable with the Main.js file. Because there are a lot of parts to it, I gave you most the code up front. Don't move onto the next section until you're comfortable with what you're given.
 * Now, find and remove the comment that says /*Code Here*/ 
-* Define two variables```loginOrOut``` and ```register```. As you should notice, these two vaiables are being used in the render method of this component. That should give you a hint as to what we're about to do next. 
+* Define two variables```loginOrOut``` and ```register```. As you should notice, these two variables are being used in the render method of this component. That should give you a hint as to what we're about to do next. 
 * If the ```loggedIn``` state on our component is truthy (they're logged in), then loginOrOut should be ```<li><Link to="logout" className="navbar-brand">Logout</Link></li>``` and register should be ```nulll```. If the ```loggedIn``` state is not truthy (they're not logged in), then loginOrOut should be ```<li><Link to="login" className="navbar-brand">Login</Link></li>``` and register should be ```<li><Link to="register" className="navbar-brand"> Register </Link></li>```. So what we've done now is we're able to have a dynamic menu based on if the user is logged in or not.
 
 The only other thing about this file that might look off is our ```componentWillMount``` function. Remember in our firebaseUtils object we call ```this.onChange(false)``` whenever a user logs out and ```this.onChange(true)``` whenever a user logs in. If we didn't do this, our menu would never re-render. But, by setting onChange to a function which calls setState, whenever onChange is invoked our component will rerender due to setState being called. 
@@ -241,3 +241,58 @@ Now we need to tell our app what to do when someone clicks on Schedule. We're go
 
 Now if everything is working properly you should have a nice UI for your Home page. If you don't, go check your router.js file and make sure you've got this line ```<Route name="home" path="/" handler={Home} />``` specifically with ```path="/"```. 
 
+#### Step 7: Schedule Route
+
+Alright only a few more components left. The next one we're going to build out is the Schedule component. It looks like this,
+
+![Schedule Page ](http://s21.postimg.org/vsbi2a1c7/Screen_Shot_2015_02_18_at_2_04_45_PM.png)
+
+It shows some of that teams information, then maps over the teams schedule while creating a new Box Score for each game in the schedule. 
+
+*Note: When we created the <Link> for this function we passed it a param which was the team's id. To get that param, we use the ```Router.State``` mixin that's already been created for you as well as calling ```this.getParams().team```. For example, if we're at ```nbaroutes.com/schedule/jazz``` then calling ```this.getParams().team``` will return us 'jazz'. There is still one more step we have to do in the router to get this functionality but we'll do that later.*
+
+* Create an initial state object that has the following properties and values. 
+   - wins: 0
+   - losses: 0
+   - id: ''
+   - schedule: []
+   - name: (The name of the NBA Team's page we're on. For example, "Utah Jazz")
+
+*Hint: For the name property, utilize ```nbaTeams.teamsHash``` as well as the teams id from the route parameter.
+
+Now in our componentDidMount lifecycle we're going to set up our firebase refs in order to utilize the real time bindings of firebase. 
+
+* When the component mounts, do the following
+  - create a ```team``` variable whose value is the current team id of the route we're on (use ```getParams()``` again).
+  - Add a ```firebaseRef``` property your ```this``` object and set it equal to the function invocation of ```firebaseUtils.getRef``` giving us a reference to our firebase in our component.
+  - Now, use firebase's ```on('value', cb)``` [API HERE](https://www.firebase.com/docs/web/guide/retrieving-data.html) to get the data in the (team + '/schedule') firebase endpoint, use ```firebaseUtils.toArray``` to make it into an array, then use ```this.setState``` to set add the data you got from our firebase as the ```schedule``` property on the component's state.
+
+Next, we're going to do that same process but for our data that lives at ```/info``` rather than ```/schedule```.
+
+  - Again, use firebase's ```on('value', cb)``` to to get data in the (team + '/info') firebase endpoint. This data will contain the teams wins and losses. Use ```this.setState``` to set the wins and losses properties on the component's state object with the wins/losses data we got back from firebase. *If there haven't been any games (wins/losses) yet, set the values to 0.*
+
+At this point notice that there's a commented out ```GameBox``` component. You can probably guess the purpose of this component. Because it's pretty clear what the component does and what values it takes in, I'm going to leave out the instructions for creating it but that's what you should do next. If you've looked at the example and tried the best you can, flag down a mentor and we'd be happy to help you.
+
+Once you've finished the Schedule and the GameBox components, head over to your routes.js file and add the ```schedule``` route. Once finished, your routes should look something like this,
+
+```javascript
+var routes = (
+  <Route handler={Main} >
+    <Route name="home" path="/" handler={Home} />
+    <Route name="login" handler={Login} />
+    <Route name="logout" handler={Logout} />
+    <Route name="register" handler={Register} />
+    <Route name="schedule" path="/schedule/:team" handler={Schedule} />
+  </Route>
+);
+```
+
+*Note: the ```:team``` paramter at the end of our schedule path. This is a placeholder for whatever endpoint we hit. In the use of our example, 'jazz' or any other team id. 
+
+#### Step 8: AddGames
+
+The last step is the AddGame path which will allow authenticated users the ability to add new games to certain team's schedules. Because this repo is rather long, I've given you this code. However, that doesn't mean you should call it quits and be done at this point. There are some really fundamental thins to take away from ```AddGame.js``` and ```NewGameForm.js```. 
+
+Specifically the way we're using our Authenticated Mixin to protect the AddGame route. Remember earlier when I mentioned how once the boilerplate route protection stuff is complete it would be a breeze to protect our routes? Well now we can see that. The only thing we have to do to make the route/component protected is to add our ```Authenticated``` object as a mixing (as seen in our ```mixins``` array in the AddGame component). 
+
+Double check that your app is working properly. As always, there's a solutions branch you can check out to see how I went about creating this app. 
