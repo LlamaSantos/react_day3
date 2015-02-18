@@ -65,7 +65,7 @@ Head over to your ```authenticated.js``` file in the ```utils``` folder. As ment
 * In the ```authenticated.js``` file, require the ```Login``` component as well as the ```firebaseUtils``` file. 
 * Create an ```authenticated``` object and then use ```module.exports``` to export that object so we can require it in other files.
 * Add a ```statics``` property to the ```authenticated``` object. 
-* Inside your ```statics``` object, add a ```willTransitionTo``` method which has ```transition``` as its paramter.
+* Inside your ```statics``` object, add a ```willTransitionTo``` method which has ```transition``` as its parameter.
 
 Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object which will check is the user is logged if. If they're not, we'll redirec them to the login route.
 
@@ -95,7 +95,7 @@ So now we have the email and password, we're going to want to log the user in wi
 
 * invoke the ```loginWithPW``` method on the firebaseUtils object passing it two arguments. The first argument is an object with the keys ```email``` and ```password``` whose values are the email and pw variables we made early, and the second argument is a callback function which will get invoked when firebase has logged the user in. 
 
-Now is where the magic happens. Remember in the ```authenticated.js``` file when we added a ```attemptedTransition``` propery on our Login component if a user tried to visit a route they weren't authenticated for? Well remember that took them to the login route and cached the attempted route as ```attemptedTransition```. So what we're going to want to do in this callback is check if ```attemptedTransition``` is a thing, because if it is, that means we got to this route by attempting to visit another route we weren't authenticated for and once we do login, we should continue to that route again.
+Now is where the magic happens. Remember in the ```authenticated.js``` file when we added a ```attemptedTransition``` property on our Login component if a user tried to visit a route they weren't authenticated for? Well remember that took them to the login route and cached the attempted route as ```attemptedTransition```. So what we're going to want to do in this callback is check if ```attemptedTransition``` is a thing, because if it is, that means we got to this route by attempting to visit another route we weren't authenticated for and once we do login, we should continue to that route again.
 
 * In the callback function (2nd parameter to the loginWithPW method), create an if statement that checks if ```Login.attemptedTransition``` is truthy. If it is, save the current value of ```Login.attemptedTransition``` to a variable called ```transition```, then set ```Login.attemptedTransition``` to null, then invoke the ```retry``` method on your current ```transition``` variable. ```retry()``` will continue to the route the user was originally trying to get to when they were taken to login. If ```Login.attemptedTransition``` was not truthy, then in your else statement use ```this.replaceWith('home')``` to take the user to the ```home``` state. *Tip: remember that when you use ```this``` inside your callback function, without attaching ```.bind(this)``` to the end of the callback function, ```this``` won't be what you want it to be.
 
@@ -136,7 +136,7 @@ toArray: takes in an object and converts it to an array.
 Notice also you're given a few things already. Be sure to update the "forge" variable with your Firebase url.
 ref creates a new reference to your firebase and cachedUser will be the user once they log in.
 
-formatEmailForFibase takes in an email and makes it appropriate to use as a key in firebase
+formatEmailForFirebase takes in an email and makes it appropriate to use as a key in firebase
 
 addNewUserToFB takes in a newUser object and saves their info under the ```user``` path in our firebase.
 
@@ -162,7 +162,7 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
 ```
 * Next create a ```isLoggedIn``` method which will return true if the cachedUser is not null or, it will return true if ```ref.getAuth()``` is also not null. If they're both null, return false.
 * Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(flalse)``` which we'll talk about later.
-* Lastly createa a ```toArray``` method which takes in a object, and returns an array with the indices in that array being the values that were in the object. The purpsose of this is that firebase only returns us object, so we need to convert them to arrays in order to user ```.map``` and ```.filter``` on our data. 
+* Lastly create a ```toArray``` method which takes in a object, and returns an array with the indices in that array being the values that were in the object. The purpose of this is that firebase only returns us object, so we need to convert them to arrays in order to user ```.map``` and ```.filter``` on our data. 
 
 *I realize these instructions have been pretty vague. What I don't want to have happen is that you just copy my implementation of this app and get nothing out of it. If you're struggling right now I suggest you do these two things. First, go back to the Login/Register component and look how we're invoking certain methods on our firebaseUtils object. This will give you insight into how each method is being used. Next, go back to the sample app and the descriptions of each file and think about how you'd accomplish the certain tasks. I'll walk over my code later today but I don't want you to essentially just recreate what I have. Finding your own way of building the app will help you much more than copying my way*
 
@@ -183,8 +183,8 @@ The only other thing about this file that might look off is our ```componentWill
 
 #### Step 5: Routes
 
-We're almost done with our protected routes. All we need to do now is specifcy what our routes will look like in our routes.js file. 
+We're almost done with our protected routes. All we need to do now is specify what our routes will look like in our routes.js file. 
 
-I don't want to give you the code for this one but remember that you can specify your routes using JSX. Check out [React Routers main API](https://github.com/rackt/react-router) for an example of how to do this. 
+I don't want to give you the code for this one but remember that you can specify your routes using JSX. Check out [React Routers main API](https://github.com/rackt/react-router) under the "What's it look like" section for an example of how to do this. 
 
-**As I mentioned earlier, I realize this section was super heavy. If you're still struggling, I've made a Repo which is the bare minimum you need to get Authentication/Protected Routes working with Firebase and React Router which can be found [HERE](https://github.com/tylermcginnis/react-router-firebase-auth). I highly reccommend you fork it and play around with it because it follows the exact same pattern we did above without all the extra NBA Routes stuff. You'll find that once it clicks, you'll love how it works. Another great resource is Michael Jackson's talk from Reactconf. [Here's his talk](http://youtu.be/XZfvW1a8Xac?t=18m42s) and that will take you to the exact moment he talks about authentication with React Router. **
+**As I mentioned earlier, I realize this section was super heavy. If you're still struggling, I've made a Repo which is the bare minimum you need to get Authentication/Protected Routes working with Firebase and React Router which can be found [HERE](https://github.com/tylermcginnis/react-router-firebase-auth). I highly recommend you fork it and play around with it because it follows the exact same pattern we did above without all the extra NBA Routes stuff. You'll find that once it clicks, you'll love how it works. Another great resource is Michael Jackson's talk from Reactconf. [Here's his talk](http://youtu.be/XZfvW1a8Xac?t=18m42s) and that will take you to the exact moment he talks about authentication with React Router. **
