@@ -187,4 +187,57 @@ We're almost done with our protected routes. All we need to do now is specify wh
 
 I don't want to give you the code for this one but remember that you can specify your routes using JSX. Check out [React Routers main API](https://github.com/rackt/react-router) under the "What's it look like" section for an example of how to do this. 
 
-**As I mentioned earlier, I realize this section was super heavy. If you're still struggling, I've made a Repo which is the bare minimum you need to get Authentication/Protected Routes working with Firebase and React Router which can be found [HERE](https://github.com/tylermcginnis/react-router-firebase-auth). I highly recommend you fork it and play around with it because it follows the exact same pattern we did above without all the extra NBA Routes stuff. You'll find that once it clicks, you'll love how it works. Another great resource is Michael Jackson's talk from Reactconf. [Here's his talk](http://youtu.be/XZfvW1a8Xac?t=18m42s) and that will take you to the exact moment he talks about authentication with React Router. **
+Once you're done you should be able to register, login, and logout of the app.
+
+**As I mentioned earlier, I realize this section was super heavy. If you're still struggling, I've made a Repo which is the bare minimum you need to get Authentication/Protected Routes working with Firebase and React Router which can be found [HERE](https://github.com/tylermcginnis/react-router-firebase-auth). I highly recommend you fork it and play around with it because it follows the exact same pattern we did above (including firebaseUtils, Login, Logout components, etc) without all the extra NBA Routes stuff. You'll find that once it clicks, you'll love how it works. Another great resource is Michael Jackson's talk from Reactconf. [Here's his talk](http://youtu.be/XZfvW1a8Xac?t=18m42s) and that will take you to the exact moment he talks about authentication with React Router. **
+
+#### Step 6: Home Page
+
+Now that the authentication is finished, let's write up the home page. As a reminder, the homepage looks like this, 
+
+![NBA Routes Preview](http://s24.postimg.org/oyxq948n9/nbaroutes.png)
+
+It's essentially mapping over a list of all the teams and creating a UI for each of those teams that allows us to view that teams Schedule or add a new game for that team. 
+
+First thing we need to do is set the initial state of our component. 
+
+* Set a ```teams``` property on the initial state of the Home component whose value is an empty array.
+
+Next thing we need to do is when our component mounts, we need to use our teamsObj object to create a new teams array which we can then use to map over.
+
+* When the component mounts, using teamsObj, set the ```teams``` state to an array of object whose keys are "id" and whose values are the names of the team. For example, something similar to this. ```[id: "blazers", id: "bulls"]```.
+
+Now what you need to do is map over ```this.state.teams``` creating the UI for each teams container. Here is what this basic template will look like inside of map,
+
+```html
+        <div className="col-sm-4" key={item.id}>
+          <div style={}></div>
+          <div className="col-sm-12">
+            <div className="text-center">
+              <div className="btn-group">
+                <button className="btn btn-secondary">Schedule</button>
+                <button className="btn btn-secondary">Add Game</button>
+              </div>
+            </div>
+          </div>
+        </div>
+```
+
+* create a ```teams``` variable that is the result of mapping over ```this.state.teams``` and returning the template above for each team. 
+
+Once you do that you'll have a teams variable which is an array of these templates, but looking at the template you should notice there are a few things missing. 
+
+First, we have an empty styles property.
+Second, we have a Schedule button that doesn't do anything
+Third, we have a empty AddGame button that doesn't do anything.
+
+* Using teamsObj, give each element it's own style based on the ```item.id``` property. *Hint: If you're stuck put a debugger here and inspect the ```teamsObj``` object. It's an object full of teams with that teams specific css. So the style will need to be the teamsObj property which coordinates with that teams id (or item.id).*
+
+Now we need to tell our app what to do when someone clicks on Schedule. We're going to use React Routers ```Link``` component to help us out here. 
+
+* Using ```<Link>```, when someone clicks on the "Schedule" button, have them be taken to the ```schedule``` route and give that route an object with a property of ```team``` and a value of ```item.id``` as params. *Hint: The API for Link can be found [HERE](https://github.com/rackt/react-router/blob/master/docs/api/components/Link.md)
+
+* Using Using ```<Link>```, when someone clicks on the "Add Game" button, have them be taken to the ```addGame``` route and give that route an object with a property of ```team``` and a value of ```item.id``` as params.
+
+Now if everything is working properly you should have a nice UI for your Home page. If you don't, go check your router.js file and make sure you've got this line ```<Route name="home" path="/" handler={Home} />``` specifically with ```path="/"```. 
+
