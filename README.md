@@ -97,10 +97,58 @@ So now we have the email and password, we're going to want to log the user in wi
 
 Now is where the magic happens. Remember in the ```authenticated.js``` file when we added a ```attemptedTransition``` propery on our Login component if a user tried to visit a route they weren't authenticated for? Well remember that took them to the login route and cached the attempted route as ```attemptedTransition```. So what we're going to want to do in this callback is check if ```attemptedTransition``` is a thing, because if it is, that means we got to this route by attempting to visit another route we weren't authenticated for and once we do login, we should continue to that route again.
 
-* In the callback function (2nd parameter to the loginWithPW method), create an if statement that checks if ```Login.attemptedTransition``` is truthy. If it is, save the current value of ```Login.attemptedTransition``` to a variable called ```transition```, then set ```Login.attemptedTransition``` to null, then invoke the ```retry``` method on your current ```transition``` variable. ```retry()``` will continue to the route the user was originally trying to get to when they were taken to login. If ```Login.attemptedTransition``` was not truthy, then in your else statement use ```this.replaceWith('home')``` to take the user to the ```home``` state. 
+* In the callback function (2nd parameter to the loginWithPW method), create an if statement that checks if ```Login.attemptedTransition``` is truthy. If it is, save the current value of ```Login.attemptedTransition``` to a variable called ```transition```, then set ```Login.attemptedTransition``` to null, then invoke the ```retry``` method on your current ```transition``` variable. ```retry()``` will continue to the route the user was originally trying to get to when they were taken to login. If ```Login.attemptedTransition``` was not truthy, then in your else statement use ```this.replaceWith('home')``` to take the user to the ```home``` state. *Tip: remember that when you use ```this``` inside your callback function, without attaching ```.bind(this)``` to the end of the callback function, ```this``` won't be what you want it to be.
 
 To reiterate one more time on what's happening above. If a user tries to go to a route they're not authenticated for, our app will now take them to this Login component and cache the original route they were attempting to go to. When they login, if there was an original route they were trying to go to, once they log in they'll be taken to that route. If there wasn't an original route and they just went straight to the Login route, our app will just take them to the home route.
 
+While we're working on Login/Logout stuff, let's hurry and create finish the Logout component. 
+
+This component is pretty basic and will have the following criteria. 
+
+* the render method will just return a paragraph tag that says "You are now logged out". 
+* When this component mounts, you'll invoke the ```logout``` method on the ```firebaseUtils``` object. 
+
+Now head over to Register.js and let's finish this Component. 
+
+Everything is finished for you except for the handleSubmit method.
+
+* Create a handle submit method which has the following characteristics.
+  - Uses preventDefault to prevent the default action
+  - grabs the email and password from the refs in the render method
+  - invokes the ```createUser``` method on the ```firebaseUtils``` object passing it an object ({email: email, password: password}), and a callback function
+  - The callback function will receive a result as its only parameter. If that result is truthy, use ```this.replaceWith('home')``` to take the user to the home route. 
+
+Now, whenever someone registers, they'll get added as a user to firebase, saved to our firebase database, then they'll be taken to the "home" route.
+
+We've been calling a lot of methods on our firebaseUtils object. Let's now head over there and finish that file. 
+
+#### Step 3: Firebase Utility Functions
+
+This firebaseUtils file is going to contain an object that will have a bunch of helper methods for interacting with our firebase. They are as follows
+
+getRef: returns a reference to your firebase
+createUser: Creates a new user in firebase then logs them in.
+loginWithPW: Logs a user in (or authenticates them)
+isLoggedIn: returns if the user is logged in or not
+logout: logs the current user out
+toArray: takes in an object and converts it to an array. 
+
+Notice also you're given a few things already. Be sure to update the "forge" variable with your Firebase url.
+ref creates a new reference to your firebase and cachedUser will be the user once they log in.
+
+formatEmailForFibase takes in an email and makes it appropriate to use as a key in firebase
+
+addNewUserToFB takes in a newUser object and saves their info under the ```user``` path in our firebase.
+
+* Create a firebaseUtils object then use module.exports to export that module from this file.
+* Give the firebaseUtils object a ```getRef``` method which returns the ```ref``` which was created earlier.
+* Give the firebaseUtils object a ```createUser``` method which has a ```user``` and a ```cb``` parameter. Inside this createUser you're going to use firebase to create a new user in your firebase. The API for createUser can be found [HERE](https://www.firebase.com/docs/web/api/firebase/createuser.html). *Hint: Once you successfully create your user, go ahead and make it so that user gets logged in. This way your user won't have to register and then login but it will automatically log them in once they register.
+* create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. 
+* Next create a ```isLoggedIn``` method which will return true if the cachedUser is not null or, it will return true if ```ref.getAuth()``` is also not null. If they're both null, return false.
+* Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(false)``` which we'll talk about later.
+* Lastly createa a ```toArray``` method which takes in a object, and returns an array with the indices in that array being the values that were in the object. The purpsose of this is that firebase only returns us object, so we need to convert them to arrays in order to user ```.map``` and ```.filter``` on our data. 
+
+*I realize these instructions have been pretty vague. What I don't want to have happen is that you just copy my implementation of this app and get nothing out of it. If you're struggling right now go back to the sample app and the descriptions of each file and think about how you'd accomplish the certain tasks. I'll walk over my code tomorrow but I don't want you to essentially just recreate what I have. Finding your own way of building the app will help you much more than copying my way*
 
 
 
