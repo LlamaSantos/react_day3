@@ -143,12 +143,41 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
 * Create a firebaseUtils object then use module.exports to export that module from this file.
 * Give the firebaseUtils object a ```getRef``` method which returns the ```ref``` which was created earlier.
 * Give the firebaseUtils object a ```createUser``` method which has a ```user``` and a ```cb``` parameter. Inside this createUser you're going to use firebase to create a new user in your firebase. The API for createUser can be found [HERE](https://www.firebase.com/docs/web/api/firebase/createuser.html). *Hint: Once you successfully create your user, go ahead and make it so that user gets logged in. This way your user won't have to register and then login but it will automatically log them in once they register.
-* create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. 
+* create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. *this one can get a little hairy. Here's how I implemented it*. 
+```javascript
+  loginWithPW: function(userObj, cb, cbOnRegister){
+    ref.authWithPassword(userObj, function(err, authData){
+      if(err){
+        console.log('Error on login:', err.message);
+        cbOnRegister && cbOnRegister(false);
+      } else {
+        authData.email = userObj.email;
+        cachedUser = authData;
+        cb(authData);
+        this.onChange(true);
+        cbOnRegister && cbOnRegister(true);
+      }
+    }.bind(this));
+  }
+```
 * Next create a ```isLoggedIn``` method which will return true if the cachedUser is not null or, it will return true if ```ref.getAuth()``` is also not null. If they're both null, return false.
-* Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(false)``` which we'll talk about later.
+* Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(flalse)``` which we'll talk about later.
 * Lastly createa a ```toArray``` method which takes in a object, and returns an array with the indices in that array being the values that were in the object. The purpsose of this is that firebase only returns us object, so we need to convert them to arrays in order to user ```.map``` and ```.filter``` on our data. 
 
 *I realize these instructions have been pretty vague. What I don't want to have happen is that you just copy my implementation of this app and get nothing out of it. If you're struggling right now I suggest you do these two things. First, go back to the Login/Register component and look how we're invoking certain methods on our firebaseUtils object. This will give you insight into how each method is being used. Next, go back to the sample app and the descriptions of each file and think about how you'd accomplish the certain tasks. I'll walk over my code later today but I don't want you to essentially just recreate what I have. Finding your own way of building the app will help you much more than copying my way*
 
+#### Step 4: Routes
 
+There are two more steps left before we're completely done with our protected routes. They are adding in our main Menu interface, and adding in our actual Routes in the config folder. Let's start with the interface. 
+
+Head over to ```main.js```. Remember from the React Router lecture, the ```<RouteHandler />``` element will be swapped out with whichever component is currently active on that specific route. Meaning, if in our routes we said that we want the Login component to be active whenever we're at ```/login```, then when we're out ```/login``` then ```<RouteHandler />``` will be swapped out with ```<Login />```. What that also means is that anything that surrounds ```<RouteHandler />``` will always be there no matter what route we're on. This is perfect for something like our menu where the user will have the option to sign in or sign out no matter what route their on. 
+
+This brings up an interesting example though. If the user is logged in, we don't want to show them the log in button. If they're logged out, we don't want to show them the log out button. In this section we'll introduce rendering dynamic content based on some piece of data. It sounds more difficult than it is. 
+
+* Before we modify any code, get comfortable with the Main.js file. Because there are a lot of parts to it, I gave you most the code up front. Don't move onto the next section until you're comfortable with what you're given.
+* Now, find and remove the comment that says /*Code Here*/ 
+* Define two variables```loginOrOut``` and ```register```. As you should notice, these two vaiables are being used in the render method of this component. That should give you a hint as to what we're about to do next. 
+* If the ```loggedIn``` state on our component is truthy (they're logged in), then loginOrOut should be ```<li><Link to="logout" className="navbar-brand">Logout</Link></li>``` and register should be ```nulll```. If the ```loggedIn``` state is not truthy (they're not logged in), then loginOrOut should be ```<li><Link to="login" className="navbar-brand">Login</Link></li>``` and register should be ```<li><Link to="register" className="navbar-brand"> Register </Link></li>```. So what we've done now is we're able to have a dynamic menu based on if the user is logged in or not.
+
+The only other thing about this file that might look off is our ```componentWillMount``` function. Remember in our firebaseUtils object we call ```this.onChange(false)``` whenever a user logs out and ```this.onChange(true)``` whenever a user logs in. If we didn't do this, our menu would never re-render. But, by setting onChange to a function which calls setState, whenever onChange is invoked our component will rerender due to setState being called. 
 
