@@ -45,6 +45,17 @@ The default folder structure should look like this
 
 That's a pretty big list. Don't panic. Remember one of the benefits of using React is that we're able to keep things very compartmentalized as we see in our folder structure above. Although you probably already have a good idea of what's going to happen with the folder structure, let's take a little deeper dive and look at each piece and its purpose.
 
+First, notice our components folder is split into three sections. ```login-register```, ```secure```, and any other components. As you can imagine, all of our components that deal with login/logout and registration will go in the login-register folder, our components which we want only authenticated users to view (because components will be tied to routes) will go in the secure folder, and any other component will just go in the components folder. 
+
+Our ```routes.js``` file in our ```config``` folder is going to be the definition of our routes with React Router. 
+
+Now let's take a look at the ```utils``` folder. 
+  - ```authenticated.js``` will be a mixin we put on any components we want to be a "protected" component (or route). React Router gives us a hook into its life cycle and this authenticated component will run before a component is mounted, it will check if the user is authenticated, if he/she is not, it will redirect them to the login route.
+  - ```firebaseUtils.js``` will be a bunch of helper methods for communicating with firebase.
+  - ```nbaTeams.js``` is just an array and an object full of all the teams who will have their own schedule in our app.
+  - ```sprite.js``` will just return an object which we will use for our CSS for the ```spritesheet.png``` file later. 
+
+That's pretty much it. I know that seems like a lot, because it is. This is a pretty big app that has some pretty fundamental pieces to it. 
 
 
 
