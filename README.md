@@ -64,10 +64,10 @@ Head over to your ```authenticated.js``` file in the ```utils``` folder. As ment
 
 * In the ```authenticated.js``` file, require the ```Login``` component as well as the ```firebaseUtils``` file.
 * Create an ```authenticated``` object and then use ```module.exports``` to export that object so we can require it in other files.
-* Add a ```statics``` property to the ```authenticated``` object.
+* Add a ```statics``` property to the ```authenticated``` object, which will also be an object.
 * Inside your ```statics``` object, add a ```willTransitionTo``` method which has ```transition``` as its parameter.
 
-Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object which will check is the user is logged if. If they're not, we'll redirect them to the login route.
+Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object, which will check if the user is logged in. If they're not, we'll redirect them to the login route.
 
 * If ```firebaseUtils.isLoggedIn()``` is falsy, then add a property to the ```Login``` component called ```attemptedTransition``` and set it equal to the transition parameter. Then, use ```transition.redirect('login')``` to redirect to the login page.
 
