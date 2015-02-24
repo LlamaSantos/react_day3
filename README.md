@@ -66,10 +66,11 @@ Head over to your ```authenticated.js``` file in the ```utils``` folder. As ment
 * Create an ```authenticated``` object and then use ```module.exports``` to export that object so we can require it in other files.
 * Add a ```statics``` property to the ```authenticated``` object, which will also be an object.
 * Inside your ```statics``` object, add a ```willTransitionTo``` method which has ```transition``` as its parameter.
+*This is where we store where the user was trying to go.*
 
 Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object, which will check if the user is logged in. If they're not, we'll redirect them to the login route.
 
-* If ```firebaseUtils.isLoggedIn()``` is falsy, then add a property to the ```Login``` component called ```attemptedTransition``` and set it equal to the transition parameter. Then, use ```transition.redirect('login')``` to redirect to the login page.
+* If ```firebaseUtils.isLoggedIn()``` is falsy, then set the ```attemptedTransition``` property of the ```Login``` component to the transition parameter. Then, use ```transition.redirect('login')``` to redirect to the login page.
 
 The main point of that if statement was to check if the user was logged in and if not, redirect them to login. This wasn't the only purpose though. What's fantastic about React Router is it can cache the authenticated route you're wanting to go to, log you in, then continue to that route once you've logged in. That's the purpose of the ```Login.attemptedTransition = transition``` line. You cache the transition as a property on the Login component then in our Login component once we login, we'll redirect to that original route.
 
