@@ -126,12 +126,13 @@ We've been calling a lot of methods on our firebaseUtils object. Let's now head 
 #### Step 3: Firebase Utility Functions
 
 This firebaseUtils file is going to contain an object that will have a bunch of helper methods for interacting with our firebase. They are as follows
-  * getRef: returns a reference to your firebase
-  * createUser: Creates a new user in firebase then logs them in.
-  * loginWithPW: Logs a user in (or authenticates them)
-  * isLoggedIn: returns if the user is logged in or not
-  * logout: logs the current user out
-  * toArray: takes in an object and converts it to an array.
+
+```getRef:``` returns a reference to your firebase. <br />
+```createUser:``` Creates a new user in firebase then logs them in. <br />
+```loginWithPW:``` Logs a user in (or authenticates them). <br />
+```isLoggedIn:``` returns if the user is logged in or not. <br />
+```logout:``` logs the current user out. <br />
+```toArray:``` takes in an object and converts it to an array.
 
 Notice also you're given a few things already. Be sure to update the "forge" variable with your Firebase url.
 ref creates a new reference to your firebase and cachedUser will be the user once they log in.
