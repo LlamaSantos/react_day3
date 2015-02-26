@@ -144,7 +144,7 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
 * Create a firebaseUtils object then use module.exports to export that module from this file.
 * Give the firebaseUtils object a ```getRef``` method which returns the ```ref``` which was created earlier.
 * Give the firebaseUtils object a ```createUser``` method which has a ```user``` and a ```cb``` parameter. Inside this createUser you're going to use firebase to create a new user in your firebase. The API for createUser can be found [HERE](https://www.firebase.com/docs/web/api/firebase/createuser.html). *Hint: Once you successfully create your user, go ahead and make it so that user gets logged in. This way your user won't have to register and then login but it will automatically log them in once they register.
-* create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. *this one can get a little hairy. Here's how I implemented it*.
+* Create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. *this one can get a little hairy. Here's how I implemented it*.
 ```javascript
   loginWithPW: function(userObj, cb, cbOnRegister){
     ref.authWithPassword(userObj, function(err, authData){
