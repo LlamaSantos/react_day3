@@ -102,7 +102,7 @@ Now is where the magic happens. Remember in the ```authenticated.js``` file when
 
 To reiterate one more time on what's happening above. If a user tries to go to a route they're not authenticated for, our app will now take them to this Login component and cache the original route they were attempting to go to. When they login, if there was an original route they were trying to go to, once they log in they'll be taken to that route. If there wasn't an original route and they just went straight to the Login route, our app will just take them to the home route.
 
-While we're working on Login/Logout stuff, let's hurry and create finish the Logout component.
+While we're working on Login/Logout stuff, let's hurry and create/finish the Logout component.
 
 This component is pretty basic and will have the following criteria.
 
