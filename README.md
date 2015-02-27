@@ -292,9 +292,9 @@ var routes = (
 
 #### Step 8: AddGames
 
-The last step is the AddGame path which will allow authenticated users the ability to add new games to certain team's schedules. Because this repo is rather long, I've given you this code. However, that doesn't mean you should call it quits and be done at this point. There are some really fundamental thins to take away from ```AddGame.js``` and ```NewGameForm.js```.
+The last step is the AddGame path which will allow authenticated users the ability to add new games to certain team's schedules. Because this repo is rather long, I've given you this code. However, that doesn't mean you should call it quits and be done at this point. There are some really fundamental things to take away from ```AddGame.js``` and ```NewGameForm.js```.
 
-Specifically the way we're using our Authenticated Mixin to protect the AddGame route. Remember earlier when I mentioned how once the boilerplate route protection stuff is complete it would be a breeze to protect our routes? Well now we can see that. The only thing we have to do to make the route/component protected is to add our ```Authenticated``` object as a mixing (as seen in our ```mixins``` array in the AddGame component).
+Specifically the way we're using our Authenticated Mixin to protect the AddGame route. Remember earlier when I mentioned how once the boilerplate route protection stuff is complete it would be a breeze to protect our routes? Well now we can see that. The only thing we have to do to make the route/component protected is to add our ```Authenticated``` object as a mixin (as seen in our ```mixins``` array in the AddGame component).
 
 * The very last thing to do is head back over to your routes.js file and add the newGame route making sure the path is set up properly with the route paramter.
 
