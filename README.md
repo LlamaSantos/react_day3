@@ -265,8 +265,8 @@ Now in our componentDidMount lifecycle we're going to set up our firebase refs i
 
 * When the component mounts, do the following
   - create a ```team``` variable whose value is the current team id of the route we're on (use ```getParams()``` again).
-  - Add a ```firebaseRef``` property your ```this``` object and set it equal to the function invocation of ```firebaseUtils.getRef``` giving us a reference to our firebase in our component.
-  - Now, use firebase's ```on('value', cb)``` [API HERE](https://www.firebase.com/docs/web/guide/retrieving-data.html) to get the data in the (team + '/schedule') firebase endpoint, use ```firebaseUtils.toArray``` to make it into an array, then use ```this.setState``` to set add the data you got from our firebase as the ```schedule``` property on the component's state.
+  - Add a ```firebaseRef``` property to your ```this``` object and set it equal to the function invocation of ```firebaseUtils.getRef``` giving us a reference to our firebase in our component.
+  - Now, use firebase's ```on('value', cb)``` [API HERE](https://www.firebase.com/docs/web/guide/retrieving-data.html) to get the data in the (team + '/schedule') firebase endpoint, use ```firebaseUtils.toArray``` to make it into an array, then use ```this.setState``` to set the data you got from our firebase as the ```schedule``` property on the component's state.
 
 Next, we're going to do that same process but for our data that lives at ```/info``` rather than ```/schedule```.
 
