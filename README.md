@@ -250,7 +250,7 @@ Alright only a few more components left. The next one we're going to build out i
 
 It shows some of that teams information, then maps over the teams schedule while creating a new Box Score for each game in the schedule.
 
-*Note: When we created the <Link> for this function we passed it a param which was the team's id. To get that param, we use the ```Router.State``` mixin that's already been created for you as well as calling ```this.getParams().team```. For example, if we're at ```nbaroutes.com/schedule/jazz``` then calling ```this.getParams().team``` will return us 'jazz'. There is still one more step we have to do in the router to get this functionality but we'll do that later.*
+*Note: When we created the ```<Link>``` for this function we passed it a param which was the team's id. To get that param, we use the ```Router.State``` mixin that's already been created for you as well as calling ```this.getParams().team```. For example, if we're at ```nbaroutes.com/schedule/jazz``` then calling ```this.getParams().team``` will return us 'jazz'. There is still one more step we have to do in the router to get this functionality but we'll do that later.*
 
 * Create an initial state object that has the following properties and values.
    - wins: 0
