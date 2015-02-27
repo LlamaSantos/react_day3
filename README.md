@@ -44,7 +44,7 @@ The default folder structure should look like this
 
 That's a pretty big list. Don't panic. Remember one of the benefits of using React is that we're able to keep things very compartmentalized as we see in our folder structure above. Although you probably already have a good idea of what's going to happen with the folder structure, let's take a little deeper dive and look at each piece and its purpose.
 
-First, notice our components folder is split into three sections. ```login-register```, ```secure```, and any other components. As you can imagine, all of our components that deal with login/logout and registration will go in the login-register folder, our components which we want only authenticated users to view (because components will be tied to routes) will go in the secure folder, and any other component will just go in the components folder.
+First, notice our components folder is split into three sections: ```login-register```, ```secure```, and any other components. As you can imagine, all of our components that deal with login/logout and registration will go in the login-register folder, our components which we want only authenticated users to view (because components will be tied to routes) will go in the secure folder, and any other component will just go in the components folder.
 
 Our ```routes.js``` file in our ```config``` folder is going to be the definition of our routes with React Router.
 
@@ -60,16 +60,17 @@ That's pretty much it. I know that seems like a lot, because it is. This is a pr
 
 The very first thing we're going to do is create a boilerplate for protecting certain routes in our application. Once this boilerplate is set up, authenticating specific routes will be a breeze. *I'm going to follow [THIS](https://github.com/rackt/react-router/blob/master/examples/auth-flow/app.js) example from the React Router docs pretty closely for this first part. Feel free to take a glimpse over there if you get stuck.*
 
-Head over to your ```authenticated.js``` file in the ```utils``` folder. As mentioned earlier, this module we'll add in as a mixin on any component which we want the user to be authenticated to see. What will then happen is whenever a user goes to this specific component's route, the ```willTransitionTo``` hook we're about to write will catch that request, and run its callback which will check if they're logged in and if they're not, it will redirect them to the ```login``` route.
+Head over to your ```authenticated.js``` file in the ```utils``` folder. As mentioned earlier, this module we'll add in as a mixin on any component that we want the user to be authenticated to see. What will then happen is whenever a user goes to this specific component's route, the ```willTransitionTo``` hook we're about to write will catch that request, and run its callback which will check if they're logged in and if they're not, it will redirect them to the ```login``` route.
 
 * In the ```authenticated.js``` file, require the ```Login``` component as well as the ```firebaseUtils``` file.
 * Create an ```authenticated``` object and then use ```module.exports``` to export that object so we can require it in other files.
-* Add a ```statics``` property to the ```authenticated``` object.
+* Add a ```statics``` property to the ```authenticated``` object, which will also be an object.
 * Inside your ```statics``` object, add a ```willTransitionTo``` method which has ```transition``` as its parameter.
+*This is where we store where the user was trying to go.*
 
-Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object which will check is the user is logged if. If they're not, we'll redirect them to the login route.
+Now what we're going to do is invoke the ```isLoggedIn``` method on our firebaseUtils object, which will check if the user is logged in. If they're not, we'll redirect them to the login route.
 
-* If ```firebaseUtils.isLoggedIn()``` is falsy, then add a property to the ```Login``` component called ```attemptedTransition``` and set it equal to the transition parameter. Then, use ```transition.redirect('login')``` to redirect to the login page.
+* If ```firebaseUtils.isLoggedIn()``` is falsy, then set the ```attemptedTransition``` property of the ```Login``` component to the transition parameter. Then, use ```transition.redirect('login')``` to redirect to the login page.
 
 The main point of that if statement was to check if the user was logged in and if not, redirect them to login. This wasn't the only purpose though. What's fantastic about React Router is it can cache the authenticated route you're wanting to go to, log you in, then continue to that route once you've logged in. That's the purpose of the ```Login.attemptedTransition = transition``` line. You cache the transition as a property on the Login component then in our Login component once we login, we'll redirect to that original route.
 
@@ -101,7 +102,7 @@ Now is where the magic happens. Remember in the ```authenticated.js``` file when
 
 To reiterate one more time on what's happening above. If a user tries to go to a route they're not authenticated for, our app will now take them to this Login component and cache the original route they were attempting to go to. When they login, if there was an original route they were trying to go to, once they log in they'll be taken to that route. If there wasn't an original route and they just went straight to the Login route, our app will just take them to the home route.
 
-While we're working on Login/Logout stuff, let's hurry and create finish the Logout component.
+While we're working on Login/Logout stuff, let's hurry and create/finish the Logout component.
 
 This component is pretty basic and will have the following criteria.
 
@@ -126,12 +127,12 @@ We've been calling a lot of methods on our firebaseUtils object. Let's now head 
 
 This firebaseUtils file is going to contain an object that will have a bunch of helper methods for interacting with our firebase. They are as follows
 
-getRef: returns a reference to your firebase
-createUser: Creates a new user in firebase then logs them in.
-loginWithPW: Logs a user in (or authenticates them)
-isLoggedIn: returns if the user is logged in or not
-logout: logs the current user out
-toArray: takes in an object and converts it to an array.
+```getRef:``` returns a reference to your firebase. <br />
+```createUser:``` Creates a new user in firebase then logs them in. <br />
+```loginWithPW:``` Logs a user in (or authenticates them). <br />
+```isLoggedIn:``` returns if the user is logged in or not. <br />
+```logout:``` logs the current user out. <br />
+```toArray:``` takes in an object and converts it to an array.
 
 Notice also you're given a few things already. Be sure to update the "forge" variable with your Firebase url.
 ref creates a new reference to your firebase and cachedUser will be the user once they log in.
@@ -143,7 +144,7 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
 * Create a firebaseUtils object then use module.exports to export that module from this file.
 * Give the firebaseUtils object a ```getRef``` method which returns the ```ref``` which was created earlier.
 * Give the firebaseUtils object a ```createUser``` method which has a ```user``` and a ```cb``` parameter. Inside this createUser you're going to use firebase to create a new user in your firebase. The API for createUser can be found [HERE](https://www.firebase.com/docs/web/api/firebase/createuser.html). *Hint: Once you successfully create your user, go ahead and make it so that user gets logged in. This way your user won't have to register and then login but it will automatically log them in once they register.
-* create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. *this one can get a little hairy. Here's how I implemented it*.
+* Create a loginWithPW method which uses Firebase' ```authWithPassword``` method to ([API FOUND HERE](https://www.firebase.com/docs/web/api/firebase/authwithpassword.html)) to log the user in. *this one can get a little hairy. Here's how I implemented it*.
 ```javascript
   loginWithPW: function(userObj, cb, cbOnRegister){
     ref.authWithPassword(userObj, function(err, authData){
@@ -170,14 +171,14 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
 
 There are two more steps left before we're completely done with our protected routes. They are adding in our main Menu interface, and adding in our actual Routes in the config folder. Let's start with the interface.
 
-Head over to ```main.js```. Remember from the React Router lecture, the ```<RouteHandler />``` element will be swapped out with whichever component is currently active on that specific route. Meaning, if in our routes we said that we want the Login component to be active whenever we're at ```/login```, then when we're out ```/login``` then ```<RouteHandler />``` will be swapped out with ```<Login />```. What that also means is that anything that surrounds ```<RouteHandler />``` will always be there no matter what route we're on. This is perfect for something like our menu where the user will have the option to sign in or sign out no matter what route their on.
+Head over to ```Main.js```. Remember from the React Router lecture, the ```<RouteHandler />``` element will be swapped out with whichever component is currently active on that specific route. Meaning, if in our routes we said that we want the Login component to be active whenever we're at ```/login```, then ```<RouteHandler />``` will be swapped out with ```<Login />``` when we're at ```/login```. What that also means is that anything that surrounds ```<RouteHandler />``` will always be there no matter what route we're on. This is perfect for something like our menu where the user will have the option to sign in or sign out no matter what route their on.
 
 This brings up an interesting example though. If the user is logged in, we don't want to show them the log in button. If they're logged out, we don't want to show them the log out button. In this section we'll introduce rendering dynamic content based on some piece of data. It sounds more difficult than it is.
 
 * Before we modify any code, get comfortable with the Main.js file. Because there are a lot of parts to it, I gave you most the code up front. Don't move onto the next section until you're comfortable with what you're given.
 * Now, find and remove the comment that says /*Code Here*/
 * Define two variables```loginOrOut``` and ```register```. As you should notice, these two variables are being used in the render method of this component. That should give you a hint as to what we're about to do next.
-* If the ```loggedIn``` state on our component is truthy (they're logged in), then loginOrOut should be ```<li><Link to="logout" className="navbar-brand">Logout</Link></li>``` and register should be ```nulll```. If the ```loggedIn``` state is not truthy (they're not logged in), then loginOrOut should be ```<li><Link to="login" className="navbar-brand">Login</Link></li>``` and register should be ```<li><Link to="register" className="navbar-brand"> Register </Link></li>```. So what we've done now is we're able to have a dynamic menu based on if the user is logged in or not.
+* If the ```loggedIn``` state on our component is truthy (they're logged in), then loginOrOut should be ```<li><Link to="logout" className="navbar-brand">Logout</Link></li>``` and register should be ```null```. If the ```loggedIn``` state is not truthy (they're not logged in), then loginOrOut should be ```<li><Link to="login" className="navbar-brand">Login</Link></li>``` and register should be ```<li><Link to="register" className="navbar-brand"> Register </Link></li>```. So what we've done now is we're able to have a dynamic menu based on if the user is logged in or not.
 
 The only other thing about this file that might look off is our ```componentWillMount``` function. Remember in our firebaseUtils object we call ```this.onChange(false)``` whenever a user logs out and ```this.onChange(true)``` whenever a user logs in. If we didn't do this, our menu would never re-render. But, by setting onChange to a function which calls setState, whenever onChange is invoked our component will rerender due to setState being called.
 
@@ -249,7 +250,7 @@ Alright only a few more components left. The next one we're going to build out i
 
 It shows some of that teams information, then maps over the teams schedule while creating a new Box Score for each game in the schedule.
 
-*Note: When we created the <Link> for this function we passed it a param which was the team's id. To get that param, we use the ```Router.State``` mixin that's already been created for you as well as calling ```this.getParams().team```. For example, if we're at ```nbaroutes.com/schedule/jazz``` then calling ```this.getParams().team``` will return us 'jazz'. There is still one more step we have to do in the router to get this functionality but we'll do that later.*
+*Note: When we created the ```<Link>``` for this function we passed it a param which was the team's id. To get that param, we use the ```Router.State``` mixin that's already been created for you as well as calling ```this.getParams().team```. For example, if we're at ```nbaroutes.com/schedule/jazz``` then calling ```this.getParams().team``` will return us 'jazz'. There is still one more step we have to do in the router to get this functionality but we'll do that later.*
 
 * Create an initial state object that has the following properties and values.
    - wins: 0
@@ -264,8 +265,8 @@ Now in our componentDidMount lifecycle we're going to set up our firebase refs i
 
 * When the component mounts, do the following
   - create a ```team``` variable whose value is the current team id of the route we're on (use ```getParams()``` again).
-  - Add a ```firebaseRef``` property your ```this``` object and set it equal to the function invocation of ```firebaseUtils.getRef``` giving us a reference to our firebase in our component.
-  - Now, use firebase's ```on('value', cb)``` [API HERE](https://www.firebase.com/docs/web/guide/retrieving-data.html) to get the data in the (team + '/schedule') firebase endpoint, use ```firebaseUtils.toArray``` to make it into an array, then use ```this.setState``` to set add the data you got from our firebase as the ```schedule``` property on the component's state.
+  - Add a ```firebaseRef``` property to your ```this``` object and set it equal to the function invocation of ```firebaseUtils.getRef``` giving us a reference to our firebase in our component.
+  - Now, use firebase's ```on('value', cb)``` [API HERE](https://www.firebase.com/docs/web/guide/retrieving-data.html) to get the data in the (team + '/schedule') firebase endpoint, use ```firebaseUtils.toArray``` to make it into an array, then use ```this.setState``` to set the data you got from our firebase as the ```schedule``` property on the component's state.
 
 Next, we're going to do that same process but for our data that lives at ```/info``` rather than ```/schedule```.
 
@@ -291,10 +292,10 @@ var routes = (
 
 #### Step 8: AddGames
 
-The last step is the AddGame path which will allow authenticated users the ability to add new games to certain team's schedules. Because this repo is rather long, I've given you this code. However, that doesn't mean you should call it quits and be done at this point. There are some really fundamental thins to take away from ```AddGame.js``` and ```NewGameForm.js```.
+The last step is the AddGame path which will allow authenticated users the ability to add new games to certain team's schedules. Because this repo is rather long, I've given you this code. However, that doesn't mean you should call it quits and be done at this point. There are some really fundamental things to take away from ```AddGame.js``` and ```NewGameForm.js```.
 
-Specifically the way we're using our Authenticated Mixin to protect the AddGame route. Remember earlier when I mentioned how once the boilerplate route protection stuff is complete it would be a breeze to protect our routes? Well now we can see that. The only thing we have to do to make the route/component protected is to add our ```Authenticated``` object as a mixing (as seen in our ```mixins``` array in the AddGame component).
+Specifically the way we're using our Authenticated Mixin to protect the AddGame route. Remember earlier when I mentioned how once the boilerplate route protection stuff is complete it would be a breeze to protect our routes? Well now we can see that. The only thing we have to do to make the route/component protected is to add our ```Authenticated``` object as a mixin (as seen in our ```mixins``` array in the AddGame component).
 
-* The very last thing to do is head back over to your routes.js file and add the newGame route making sure the path is set up properly with the route paramter.
+* The very last thing to do is head back over to your routes.js file and add the newGame route making sure the path is set up properly with the route paramater.
 
-Double check that your app is working properly. As always, there's a solutions branch you can check out to see how I went about creating this app.
+Double check that your app is working properly. As always, there's a solution branch you can check out to see how I went about creating this app.
