@@ -39,7 +39,17 @@ var NewGameForm = React.createClass({
         incrementWins(firebaseRef, opponentId);
         incrementLosses(firebaseRef, this.props.teamId);
       }
-    };
+    } else {
+        if(homeScore > awayScore){
+          winOrLose = "Lose";
+          incrementLosses(firebaseRef, this.props.teamId);
+          incrementWins(firebaseRef, opponentId);
+        } else {
+          winOrLose = "Win";
+          incrementLosses(firebaseRef, opponentId);
+          incrementWins(firebaseRef, this.props.teamId);
+      }
+    }
 
     var homeTeamObj = {
       awayScore: awayScore,
