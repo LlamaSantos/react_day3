@@ -22,8 +22,8 @@ var NewGameForm = React.createClass({
   },
   handleSubmit: function(){
     var firebaseRef = firebaseUtils.getRef();
-    var homeScore = this.refs.homeScore.getDOMNode().value;
-    var awayScore = this.refs.awayScore.getDOMNode().value;
+    var homeScore = Number(this.refs.homeScore.getDOMNode().value);
+    var awayScore = Number(this.refs.awayScore.getDOMNode().value);
     var homeOrAway = this.refs.homeOrAway.getDOMNode().value;
     var opponentId = this.refs.opponent.getDOMNode().value;
     var opponent = teams.teamsHash[opponentId];
@@ -35,7 +35,7 @@ var NewGameForm = React.createClass({
         incrementWins(firebaseRef, this.props.teamId);
         incrementLosses(firebaseRef, opponentId);
       } else {
-        winOrLose = "Lose"
+        winOrLose = "Lose";
         incrementWins(firebaseRef, opponentId);
         incrementLosses(firebaseRef, this.props.teamId);
       }
