@@ -161,7 +161,7 @@ addNewUserToFB takes in a newUser object and saves their info under the ```user`
     }.bind(this));
   }
 ```
-* Next create a ```isLoggedIn``` method which will return true if the cachedUser is not null or, it will return true if ```ref.getAuth()``` is also not null. If they're both null, return false.
+* Next create a ```isLoggedIn``` method which will return true if either the ```cachedUser``` or ```ref.getAuth()``` are not null. If they're both null, return false.
 * Next, create a logout method which calls ```ref.unauth()``` which will log the user out, resets the ```cachedUser``` to null, then invokes ```this.onChange(false)``` which we'll talk about later.
 * Lastly create a ```toArray``` method which takes in a object, and returns an array with the indices in that array being the values that were in the object. The purpose of this is that firebase only returns us object, so we need to convert them to arrays in order to user ```.map``` and ```.filter``` on our data.
 
