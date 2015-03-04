@@ -206,7 +206,19 @@ First thing we need to do is set the initial state of our component.
 
 Next thing we need to do is when our component mounts, we need to use our teamsObj object to create a new teams array which we can then use to map over.
 
-* When the component mounts, using teamsObj, set the ```teams``` state to an array of object whose keys are "id" and whose values are the names of the team. For example, something similar to this. ```[id: "blazers", id: "bulls"]```.
+* When the component mounts, using teamsObj, set the ```teams``` state to an array of object. Each object will have a key of "id" whose value is the names of the team, and a key of "style" whose value will be the object itself. For example, something similar to this. 
+ 
+```javascript
+
+[
+  {
+    id: "blazers",
+  },{
+    id: "bulls"
+  }
+]
+
+```.
 
 Now what you need to do is map over ```this.state.teams``` creating the UI for each teams container. Here is what this basic template will look like inside of map,
 
