@@ -240,7 +240,7 @@ Now we need to tell our app what to do when someone clicks on Schedule. We're go
 
 * Using ```<Link>```, when someone clicks on the "Schedule" button, have them be taken to the ```schedule``` route and give that route an object with a property of ```team``` and a value of ```item.id``` as params. *Hint: The API for Link can be found [HERE](https://github.com/rackt/react-router/blob/master/docs/api/components/Link.md)
 
-* Using Using ```<Link>```, when someone clicks on the "Add Game" button, have them be taken to the ```addGame``` route and give that route an object with a property of ```team``` and a value of ```item.id``` as params.
+* Using ```<Link>```, when someone clicks on the "Add Game" button, have them be taken to the ```addGame``` route and give that route an object with a property of ```team``` and a value of ```item.id``` as params.
 
 Now if everything is working properly you should have a nice UI for your Home page. If you don't, go check your router.js file and make sure you've got this line ```<Route name="home" path="/" handler={Home} />``` specifically with ```path="/"```.
 
