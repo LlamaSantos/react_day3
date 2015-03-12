@@ -1,25 +1,41 @@
-var React = require('react');
-var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
-var Link = Router.Link;
-var firebaseUtils = require('../utils/firebaseUtils');
+import React from 'react';
+import Router from 'react-router';
+import firebaseUtils from '../utils/firebaseUtils';
 
-var Main = React.createClass({
-  getInitialState: function(){
+let { RouteHandler, Link } = Router;
+
+export default React.createClass({
+
+  getInitialState() {
     return {
       loggedIn: firebaseUtils.isLoggedIn()
-    }
+    };
   },
-  handleChange: function(loggedIn){
+
+  handleChange(loggedIn) {
     this.setState({
       loggedIn: loggedIn
     });
   },
-  componentWillMount: function(){
+
+  componentWillMount() {
     firebaseUtils.onChange = this.handleChange;
   },
-  render: function(){
-    /* Code Here */
+
+  render() {
+    let isLoggedIn = firebaseUtils.isLoggedIn();
+    let register = isLoggedIn ? null :
+        (<li>
+          <Link className="navbar-brand" to='register'> Register </Link>
+        </li>);
+    let loginOrOut = isLoggedIn ?
+        (<li>
+          <Link className="navbar-brand" to='logout'> Logout </Link>
+        </li>) :
+        (<li>
+          <Link className="navbar-brand" to='login'> Login </Link>
+        </li>);
+
     return (
       <span>
         <nav className="navbar navbar-default navbar-static-top">
@@ -40,8 +56,6 @@ var Main = React.createClass({
           </div>
         </div>
       </span>
-    )
+    );
   }
 });
-
-module.exports = Main;

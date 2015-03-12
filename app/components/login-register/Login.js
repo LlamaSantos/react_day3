@@ -4,10 +4,31 @@ var firebaseUtils = require('../../utils/firebaseUtils');
 
 var Login = React.createClass({
   mixins: [Router.Navigation],
+
   statics: {
     attemptedTransition: null
   },
-  render: function(){
+
+  handleSubmit(e) {
+    e.preventDefault();
+    var info = {
+      email: this.refs.email.getDOMNode().value,
+      pw: this.refs.pw.getDOMNode().value
+    };
+
+    firebaseUtils.loginWithPw(info, () => {
+      if (Login.attemptedTransition){
+        let transition = Login.attemptedTransition;
+        Login.attemptedTransition = null;
+
+        transition.retry()
+      } else {
+        this.replaceWith('home');
+      }
+    });
+  },
+
+  render() {
     return (
       <div className="col-sm-6 col-sm-offset-3">
         <form onSubmit={this.handleSubmit}>
@@ -26,4 +47,4 @@ var Login = React.createClass({
   }
 });
 
-module.exports = Login;
+export default Login;

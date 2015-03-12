@@ -1,29 +1,54 @@
-var React = require('react');
-var Router = require('react-router');
-var firebaseUtils = require('../utils/firebaseUtils');
-var teamsObj = require('../utils/sprite');
-var nbaTeams = require('../utils/nbaTeams');
-var GameBox = require('./GameBox');
+'use strict';
 
-var Schedule = React.createClass({
+import React from 'react';
+import Router from 'react-router';
+import firebaseUtils from '../utils/firebaseUtils';
+import teamsObj from '../utils/sprite';
+import GameBox  from './GameBox';
+import { teamsHash } from '../utils/nbaTeams';
+
+export default React.createClass({
   mixins: [Router.State],
+  getInitialState() {
+    return {
+      wins: 0,
+      losses: 0,
+      id: '',
+      name: this.getParams().team,
+      schedule: []
+    }
+  },
 
-  render: function(){
+  componentWillMount() {
+    this.ref = firebaseUtils.getRef();
+    this.ref.on('value', (snapshot) => {
+      var team = snapshot.val()[this.getParams().team];
+      this.setState({
+        wins: team.info.wins || 0,
+        losses: team.info.losses || 0,
+        id: '',
+        name: this.getParams().team,
+        schedule: firebaseUtils.toArray(team.schedule),
+      });
+    });
+  },
+
+  componentDidUnmount() {
+    this.ref.off('value');
+  },
+
+  render() {
     return (
       <div className="container">
         <div className="row">
           <div className="text-center">
-            <h2> [[TEAM NAME]] Schedule </h2>
+            <h2> {teamsHash[this.state.name]} Schedule </h2>
             <div style={teamsObj[this.getParams().team]}></div>
-            <h2> Wins: [[TEAM WINS]] Losses: [[TEAM LOSSES]] </h2>
-            /*
-            <GameBox schedule={this.state.schedule} homeTeam={this.state.name} />
-            */
+            <h2> Wins: {this.state.wins} Losses: {this.state.losses} </h2>
+            <GameBox homeTeam={this.state.name} schedule={this.state.schedule} />
           </div>
         </div>
       </div>
     )
   }
 });
-
-module.exports = Schedule;

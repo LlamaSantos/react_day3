@@ -1,8 +1,17 @@
-var React = require('react');
-var firebaseUtils = require('../../utils/firebaseUtils');
+import React from 'react';
+import firebaseUtils from '../../utils/firebaseUtils';
 
-var Logout = React.createClass({
+export default React.createClass({
 
+  componentWillMount(){
+    firebaseUtils.logout();
+  },
+
+  render() {
+    return(
+      <p>
+        You are now logged out
+      </p>
+    );
+  },
 });
-
-module.exports = Logout;

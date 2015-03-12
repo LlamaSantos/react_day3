@@ -1,10 +1,24 @@
-var React = require('react');
-var firebaseUtils = require('../../utils/firebaseUtils');
-var Router = require('react-router');
+import React from 'react';
+import firebaseUtils from '../../utils/firebaseUtils';
+import Router from 'react-router';
 
-var Register = React.createClass({
+export default React.createClass({
   mixins: [ Router.Navigation ],
-  render: function(){
+
+  handleSubmit(e) {
+    e.preventDefault();
+
+    var info = {
+      email: this.refs.email.getDOMNode().value,
+      pw: this.refs.pw.getDOMNode().value
+    };
+
+    firebaseUtils.createUser(info, (err) => {
+      this.replaceWith('home');
+    });
+  },
+
+  render() {
     return (
       <div className="col-sm-6 col-sm-offset-3">
         <form onSubmit={this.handleSubmit}>
@@ -22,6 +36,3 @@ var Register = React.createClass({
     )
   }
 });
-
-module.exports = Register;
-
